@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ROWIN design tokens (from the Stitch design system) -->
+<resources>
+    <color name="rowin_primary">#184436</color>
+    <color name="rowin_primary_container">#315C4C</color>
+    <color name="rowin_surface">#F6FBF5</color>
+    <color name="rowin_on_surface">#181D1A</color>
+    <color name="rowin_error">#BA1A1A</color>
+    <color name="ic_launcher_background">#315C4C</color>
+</resources>

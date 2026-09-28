@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Manrope variable font (wght 200-800): ROWIN headlines/display -->
+    <font
+        android:font="@font/manrope"
+        android:fontVariationSettings="'wght' 700"
+        android:fontWeight="700"
+        app:font="@font/manrope"
+        app:fontVariationSettings="'wght' 700"
+        app:fontWeight="700" />
+    <font
+        android:font="@font/manrope"
+        android:fontVariationSettings="'wght' 600"
+        android:fontWeight="600"
+        app:font="@font/manrope"
+        app:fontVariationSettings="'wght' 600"
+        app:fontWeight="600" />
+</font-family>

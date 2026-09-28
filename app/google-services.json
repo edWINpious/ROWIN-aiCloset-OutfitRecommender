@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914433780797",
+    "project_id": "rowin-f0f74",
+    "storage_bucket": "rowin-f0f74.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914433780797:android:b19da708b48509d86fce54",
+        "android_client_info": {
+          "package_name": "com.example.rowin_adlproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDeMv12IyVkE_Sq1BgrEv5X3oYElij7c8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Inter variable font: ROWIN body/labels -->
+    <font
+        android:font="@font/inter"
+        android:fontVariationSettings="'wght' 500"
+        android:fontWeight="500"
+        app:font="@font/inter"
+        app:fontVariationSettings="'wght' 500"
+        app:fontWeight="500" />
+    <font
+        android:font="@font/inter"
+        android:fontVariationSettings="'wght' 400"
+        android:fontWeight="400"
+        app:font="@font/inter"
+        app:fontVariationSettings="'wght' 400"
+        app:fontWeight="400" />
+</font-family>
