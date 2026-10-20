@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Home Dashboard (feature #2): personalized greeting, live wardrobe stats
+    hero card (gradient), two quick cards, optional saved-outfit note and the
+    recently-added rail (RecyclerView driven in code, exact card metrics).
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    android:background="@color/rowin_surface">
+
+    <LinearLayout
+        android:id="@+id/home_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:id="@+id/home_greeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="28sp"
+                android:lineHeight="36sp"
+                android:letterSpacing="-0.02"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface"
+                tools:text="Good morning, Edwin" />
+
+            <TextView
+                android:id="@+id/home_tagline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/home_tagline"
+                android:textSize="16sp"
+                android:lineHeight="24sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+
+        <!-- Hero closet card: vertical gradient, 20dp radius, 24dp padding -->
+        <LinearLayout
+            android:id="@+id/home_hero_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_hero_gradient">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_closet_outlined"
+                    android:tint="@color/rowin_primary_fixed"
+                    android:contentDescription="@string/none" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/my_closet_label"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_primary_fixed" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/home_hero_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="24sp"
+                android:lineHeight="32sp"
+                android:letterSpacing="-0.01"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_primary"
+                tools:text="12 Items" />
+
+            <TextView
+                android:id="@+id/home_hero_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:lineHeight="20sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_primary_container"
+                tools:text="3 new additions this week. Explore your curated collection." />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_hero_avatars"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:overScrollMode="never"
+                    android:clipToPadding="false" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_wardrobe"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_primary" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/ic_forward"
+                        android:tint="@color/rowin_on_primary"
+                        android:contentDescription="@string/none" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Quick cards -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/home_quick_planner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_card_outline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_style_outlined"
+                        android:tint="@color/rowin_on_surface_variant"
+                        android:contentDescription="@string/none" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_low">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_calendar"
+                            android:tint="@color/rowin_on_surface"
+                            android:contentDescription="@string/none" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/quick_planner"
+                    android:textSize="16sp"
+                    android:lineHeight="22sp"
+                    android:fontFamily="@font/manrope"
+                    android:textStyle="bold"
+                    android:textColor="@color/rowin_on_surface" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quick_planner_sub"
+                    android:textSize="13sp"
+                    android:lineHeight="18sp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/rowin_on_surface_variant" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="1dp" />
+
+            <LinearLayout
+                android:id="@+id/home_quick_stylist"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_card_outline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_auto_awesome"
+                        android:tint="@color/rowin_primary"
+                        android:contentDescription="@string/none" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_low">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_send"
+                            android:tint="@color/rowin_on_surface"
+                            android:contentDescription="@string/none" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/quick_stylist"
+                    android:textSize="16sp"
+                    android:lineHeight="22sp"
+                    android:fontFamily="@font/manrope"
+                    android:textStyle="bold"
+                    android:textColor="@color/rowin_on_surface" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quick_stylist_sub"
+                    android:textSize="13sp"
+                    android:lineHeight="18sp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/rowin_on_surface_variant" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/home_saved_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant"
+            tools:text="You have 2 saved outfits" />
+
+        <!-- Recently Added rail -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/recently_added"
+                    android:textSize="20sp"
+                    android:lineHeight="26sp"
+                    android:fontFamily="@font/manrope"
+                    android:textStyle="bold"
+                    android:textColor="@color/rowin_on_surface" />
+
+                <TextView
+                    android:id="@+id/home_see_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/see_all"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface_variant" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/home_recent_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="@string/recent_empty"
+                android:textSize="14sp"
+                android:lineHeight="20sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_outline" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_recent_rail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:overScrollMode="never"
+                tools:listitem="@layout/item_recent_clothing" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

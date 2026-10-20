@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Shared top app bar (per the Stitch shell): 64dp, surface background,
+    bottom hairline, 36dp leading avatar slot, centered ROWIN wordmark,
+    36dp trailing action slot.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:parent="android.widget.LinearLayout"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/rowin_surface"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <FrameLayout
+            android:id="@+id/top_bar_leading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <FrameLayout
+            android:id="@+id/top_bar_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/wordmark_rowin" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/top_bar_trailing"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/rowin_surface_variant" />
+</merge>

@@ -60,6 +60,11 @@ class FirebaseSyncManager(
             _state.value = SyncState(Status.LOCAL_ONLY, "Firebase not configured (local-only mode)")
             return
         }
+        // Self-heal: rows duplicated by the pre-fix push/snapshot race.
+        scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val removed = runCatching { clothingDao.dedupeByRemoteId() }.getOrDefault(0)
+            if (removed > 0) Log.d(TAG, "Removed $removed duplicate closet row(s)")
+        }
         pushAllPending(scope)
         observeRemote(scope, email)
     }
@@ -181,7 +186,9 @@ class FirebaseSyncManager(
         val ownerUserId = currentEmail?.let(resolveUserId) ?: return
         for (doc in snapshot.documents) {
             val remote = doc.toClothingItem() ?: continue
-            val existing = clothingDao.getByRemoteId(doc.id)
+            val existing =
+                clothingDao.getByRemoteId(doc.id)
+                    ?: matchLocalPush(doc.id, ownerUserId, remote)
             val incoming = remote.copy(remoteId = doc.id, synced = true, userId = ownerUserId)
             when {
                 existing == null -> clothingDao.upsert(incoming)
@@ -194,6 +201,42 @@ class FirebaseSyncManager(
                 }
             }
         }
+    }
+
+    /**
+     * Finds the local row this document was pushed from.
+     *
+     * `pushItem` writes to `items/{localRowId}` while `remoteId` is still null,
+     * and records it only in the write's success callback - so this snapshot can
+     * legitimately land first. Without this match Room would insert a second row
+     * for the same garment and the closet would show the item twice.
+     *
+     * The id alone is not proof: every device auto-generates row ids, so a doc
+     * pushed from another phone could collide with an unrelated local row. The
+     * garment has to match too, otherwise we would adopt - and then overwrite -
+     * a row that has nothing to do with this document.
+     */
+    private suspend fun matchLocalPush(
+        docId: String,
+        ownerUserId: Long,
+        incoming: ClothingItemEntity,
+    ): ClothingItemEntity? {
+        docId.toLongOrNull()?.let { localId ->
+            clothingDao.getById(localId)?.takeIf { local ->
+                local.userId == ownerUserId &&
+                    local.name == incoming.name &&
+                    local.category == incoming.category &&
+                    local.createdAt == incoming.createdAt
+            }?.let { return it }
+        }
+        // Exact-content match (same name/category/color/creation time).
+        return clothingDao.findDuplicate(
+            userId = ownerUserId,
+            name = incoming.name,
+            categoryName = incoming.category.name,
+            color = incoming.color,
+            createdAt = incoming.createdAt,
+        )
     }
 
     // ---------------------------------------------------------- mapping

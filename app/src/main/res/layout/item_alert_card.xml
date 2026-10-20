@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Alert card (practical #10): AI icon, title, message, "Tap to open" -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alert_card_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="@drawable/bg_alert_card">
+
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_ai_badge">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_auto_awesome"
+            android:tint="@color/rowin_primary"
+            android:contentDescription="@string/none" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/alert_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:lineHeight="22sp"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface"
+            tools:text="Fill the gap" />
+
+        <TextView
+            android:id="@+id/alert_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant"
+            tools:text="Your closet has no shoes yet." />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/tap_to_open"
+            android:textSize="11sp"
+            android:lineHeight="14sp"
+            android:letterSpacing="0.04"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_primary" />
+    </LinearLayout>
+</LinearLayout>

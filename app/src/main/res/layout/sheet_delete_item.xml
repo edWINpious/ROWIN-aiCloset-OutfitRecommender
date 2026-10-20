@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Delete item confirmation bottom sheet (feature #18, per Stitch design) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/bg_sheet_handle" />
+
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_round_24_error">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/none"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/rowin_error"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/delete_item_title"
+        android:textSize="20sp"
+        android:lineHeight="26sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/rowin_on_surface" />
+
+    <TextView
+        android:id="@+id/sheet_delete_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/rowin_on_surface_variant"
+        android:gravity="center"
+        tools:text="@string/delete_item"
+        xmlns:tools="http://schemas.android.com/tools" />
+
+    <!-- Plain TextView, not <Button>: MaterialButton overrides android:background
+         and re-tints it, which is why the label was rendering invisible. -->
+    <TextView
+        android:id="@+id/sheet_delete_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_button_outlined_error"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:fontFamily="@font/manrope_semibold"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_error"
+        android:text="@string/delete" />
+
+    <Button
+        android:id="@+id/sheet_delete_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_button_outlined"
+        android:stateListAnimator="@null"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_on_surface"
+        android:textAllCaps="false"
+        android:text="@string/cancel" />
+</LinearLayout>

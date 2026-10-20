@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App theme: platform Material, no ActionBar (Compose draws everything) -->
-    <style name="Theme.Rowinadlproject" parent="android:Theme.Material.Light.NoActionBar">
+    <!--
+        App theme (View system / XML layouts): Material3 mapped 1:1 to the
+        ROWIN palette in ui/theme/Color.kt so every screen renders the exact
+        brand colors the Compose design used.
+    -->
+    <style name="Theme.Rowinadlproject" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/rowin_primary</item>
+        <item name="colorOnPrimary">@color/rowin_on_primary</item>
+        <item name="colorPrimaryContainer">@color/rowin_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/rowin_on_primary_container</item>
+        <item name="colorSecondary">@color/rowin_secondary</item>
+        <item name="colorSecondaryContainer">@color/rowin_secondary_container</item>
+        <item name="android:colorBackground">@color/rowin_surface</item>
+        <item name="colorOnBackground">@color/rowin_on_surface</item>
+        <item name="colorSurface">@color/rowin_surface</item>
+        <item name="colorOnSurface">@color/rowin_on_surface</item>
+        <item name="colorSurfaceVariant">@color/rowin_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/rowin_on_surface_variant</item>
+        <item name="colorOutline">@color/rowin_outline</item>
+        <item name="colorOutlineVariant">@color/rowin_outline_variant</item>
+        <item name="colorError">@color/rowin_error</item>
+        <item name="colorErrorContainer">@color/rowin_error_container</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -13,5 +33,14 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_rowin</item>
         <item name="windowSplashScreenAnimationDuration">400</item>
         <item name="postSplashScreenTheme">@style/Theme.Rowinadlproject</item>
+    </style>
+
+    <!-- Bottom sheets: ROWIN surface + top-corner radius (per the Stitch sheets) -->
+    <style name="RowinBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/rowin_surface</item>
+    </style>
+
+    <style name="RowinBottomSheetDialogStyle" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RowinBottomSheet</item>
     </style>
 </resources>

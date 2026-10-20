@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AI outfit suggestion row: name + pieces/occasion, white card with border -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/suggestion_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_suggestion_card">
+
+    <TextView
+        android:id="@+id/suggestion_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/rowin_primary"
+        tools:text="Campus Casual" />
+
+    <TextView
+        android:id="@+id/suggestion_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:lineHeight="18sp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/rowin_on_surface_variant"
+        tools:text="4 pieces - Casual" />
+</LinearLayout>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    App Settings sheet (practicals #4/#5/#10): Firebase sync status, network
+    state, and AI-alert permission - all rows dynamic (bound in code).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_sheet_handle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/settings_title"
+        android:textSize="20sp"
+        android:lineHeight="26sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/rowin_on_surface" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/settings_icon_firebase"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/none"
+            android:src="@drawable/ic_cloud_off"
+            app:tint="@color/rowin_on_surface_variant"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/settings_title_firebase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:lineHeight="24sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                tools:text="Firebase Connected" />
+
+            <TextView
+                android:id="@+id/settings_detail_firebase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant"
+                tools:text="Local-only mode" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/settings_icon_network"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/none"
+            android:src="@drawable/ic_cloud_done"
+            app:tint="@color/rowin_primary"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/settings_title_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/network_online"
+                android:textSize="16sp"
+                android:lineHeight="24sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/network_detail"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/settings_icon_alerts"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/none"
+            android:src="@drawable/ic_notifications"
+            app:tint="@color/rowin_primary"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/settings_title_alerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alerts_enabled"
+                android:textSize="16sp"
+                android:lineHeight="24sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface" />
+
+            <TextView
+                android:id="@+id/settings_detail_alerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alerts_enabled_detail"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/sheet_settings_close"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_button_outlined"
+        android:stateListAnimator="@null"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_on_surface"
+        android:textAllCaps="false"
+        android:text="@string/close_action" />
+</LinearLayout>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bottom navigation (feature #17) - exactly per the Stitch shell:
+    1dp top hairline, 80dp row, four items (Home / Closet / Outfits / Profile).
+    Active tab: brand green icon+label on a soft 20%-PrimaryFixed pill
+    (applied in code); inactive: 60%-opacity variant color.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parent="android.widget.LinearLayout">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/rowin_surface_variant" />
+
+    <LinearLayout
+        android:id="@+id/bottom_nav_row"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <LinearLayout
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/bg_round_12">
+
+            <ImageView
+                android:id="@+id/icon_home"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home_outlined"
+                android:tint="@color/rowin_on_surface_variant"
+                android:contentDescription="@string/nav_home" />
+
+            <TextView
+                android:id="@+id/label_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/nav_home"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_closet"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/bg_round_12">
+
+            <ImageView
+                android:id="@+id/icon_closet"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_closet_outlined"
+                android:tint="@color/rowin_on_surface_variant"
+                android:contentDescription="@string/nav_closet" />
+
+            <TextView
+                android:id="@+id/label_closet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/nav_closet"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_outfits"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/bg_round_12">
+
+            <ImageView
+                android:id="@+id/icon_outfits"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_style_outlined"
+                android:tint="@color/rowin_on_surface_variant"
+                android:contentDescription="@string/nav_outfits" />
+
+            <TextView
+                android:id="@+id/label_outfits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/nav_outfits"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/bg_round_12">
+
+            <ImageView
+                android:id="@+id/icon_profile"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_person_outlined"
+                android:tint="@color/rowin_on_surface_variant"
+                android:contentDescription="@string/nav_profile" />
+
+            <TextView
+                android:id="@+id/label_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/nav_profile"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+    </LinearLayout>
+</merge>

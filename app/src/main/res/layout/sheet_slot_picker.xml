@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Item picker bottom sheet per planner slot -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <TextView
+        android:id="@+id/sheet_picker_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textSize="16sp"
+        android:lineHeight="22sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/rowin_on_surface"
+        tools:text="Choose Top"
+        xmlns:tools="http://schemas.android.com/tools" />
+
+    <TextView
+        android:id="@+id/sheet_picker_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/no_items_in_category"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/rowin_outline" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sheet_picker_thumbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+    <Button
+        android:id="@+id/sheet_picker_clear"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_button_outlined"
+        android:stateListAnimator="@null"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_on_surface"
+        android:textAllCaps="false"
+        android:text="@string/clear_selection" />
+</LinearLayout>

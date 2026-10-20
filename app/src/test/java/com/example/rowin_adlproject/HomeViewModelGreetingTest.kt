@@ -28,8 +28,10 @@ class HomeViewModelGreetingTest {
     }
 
     @Test
-    fun `night hours greet good night`() {
-        assertEquals("Good night", HomeViewModel.greetingFor(22))
-        assertEquals("Good night", HomeViewModel.greetingFor(3))
+    fun `late hours still greet good evening instead of good night`() {
+        // "Good night" is never allowed; night hours fall through to evening.
+        assertEquals("Good evening", HomeViewModel.greetingFor(22))
+        assertEquals("Good evening", HomeViewModel.greetingFor(3))
+        assertEquals("Good evening", HomeViewModel.greetingFor(4))
     }
 }

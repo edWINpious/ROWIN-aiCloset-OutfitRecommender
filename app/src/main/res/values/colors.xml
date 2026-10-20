@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ROWIN design tokens (from the Stitch design system) -->
+<!-- ROWIN design tokens (mirrors ui/theme/Color.kt 1:1) -->
 <resources>
+    <!-- Brand -->
     <color name="rowin_primary">#184436</color>
+    <color name="rowin_on_primary">#FFFFFF</color>
     <color name="rowin_primary_container">#315C4C</color>
+    <color name="rowin_on_primary_container">#A4D2BE</color>
+    <color name="rowin_primary_fixed">#BEEDD8</color>
+    <color name="rowin_primary_fixed_dim">#A2D0BC</color>
+    <color name="rowin_hero_gradient_end">#26503F</color>
+
+    <!-- Surfaces -->
     <color name="rowin_surface">#F6FBF5</color>
+    <color name="rowin_surface_container_lowest">#FFFFFF</color>
+    <color name="rowin_surface_container_low">#F0F5F0</color>
+    <color name="rowin_surface_container">#EBEFEA</color>
+    <color name="rowin_surface_container_high">#E5E9E4</color>
+    <color name="rowin_surface_container_highest">#DFE4DF</color>
+    <color name="rowin_surface_variant">#DFE4DF</color>
     <color name="rowin_on_surface">#181D1A</color>
+    <color name="rowin_on_surface_variant">#414944</color>
+    <color name="rowin_nav_inactive">#99414944</color>
+
+    <!-- Secondary / outlines -->
+    <color name="rowin_outline">#717974</color>
+    <color name="rowin_outline_variant">#C0C8C3</color>
+    <color name="rowin_secondary">#58605B</color>
+    <color name="rowin_secondary_container">#DAE2DB</color>
+
+    <!-- Error -->
     <color name="rowin_error">#BA1A1A</color>
+    <color name="rowin_error_container">#FFDAD6</color>
+    <color name="rowin_on_error_container">#93000A</color>
+
+    <!-- Launcher -->
     <color name="ic_launcher_background">#315C4C</color>
 </resources>

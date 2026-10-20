@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Filter chip (feature #4): filled green when selected, container gray otherwise -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chip_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="@drawable/bg_chip"
+    android:textSize="12sp"
+    android:lineHeight="16sp"
+    android:letterSpacing="0.04"
+    android:fontFamily="@font/inter_medium"
+    android:textColor="@color/rowin_on_surface_variant"
+    tools:text="All"
+    xmlns:tools="http://schemas.android.com/tools" />

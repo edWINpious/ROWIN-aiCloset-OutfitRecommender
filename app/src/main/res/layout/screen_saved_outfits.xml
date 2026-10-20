@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Feature #14 - Saved Outfits: grid of previously saved outfits with the
+    outfit name, season and occasion; opens the detail screen on tap.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/saved_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/rowin_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/saved_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/saved_outfits"
+                android:textSize="24sp"
+                android:lineHeight="32sp"
+                android:letterSpacing="-0.01"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface" />
+
+            <TextView
+                android:id="@+id/saved_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineHeight="20sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant"
+                tools:text="2 in your collection" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Empty state -->
+    <LinearLayout
+        android:id="@+id/saved_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="48dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_circle_container">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_style_outlined"
+                android:tint="@color/rowin_primary"
+                android:contentDescription="@string/none" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/empty_outfits_title"
+            android:textSize="18sp"
+            android:lineHeight="24sp"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/empty_outfits_desc"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant" />
+
+        <Button
+            android:id="@+id/saved_create"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:text="@string/create_outfit"
+            android:textSize="14sp"
+            android:letterSpacing="0.01"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_on_primary" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/saved_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="120dp"
+        tools:listitem="@layout/item_outfit_card" />
+</LinearLayout>

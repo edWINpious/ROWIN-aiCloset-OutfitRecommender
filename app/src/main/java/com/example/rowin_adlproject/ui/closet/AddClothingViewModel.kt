@@ -119,7 +119,8 @@ class AddClothingViewModel(
             return
         }
         _analysisState.value = AnalysisState.Analyzing
-        viewModelScope.launch {
+        // Off the main thread: the base64 encode of a full-size photo is not cheap.
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             val base64 = imageStore.toBase64(file)
             val result = if (base64 != null) analyzer.analyze(base64) else null
             result
@@ -153,12 +154,17 @@ class AddClothingViewModel(
         }
     }
 
+    /** True while a save is in flight - blocks the double tap that used to add the garment twice. */
+    private var saving = false
+
     fun save(onSaved: (Long) -> Unit, onError: (String) -> Unit) {
         val trimmedName = name.value.trim()
         if (trimmedName.isEmpty()) {
             onError("Give the item a name first.")
             return
         }
+        if (saving) return
+        saving = true
         viewModelScope.launch {
             val existing = editingItem
             val entity = ClothingItemEntity(
@@ -182,7 +188,13 @@ class AddClothingViewModel(
                     repository.updateClothing(entity)
                     existing.id
                 }
-            }.onSuccess(onSaved).onFailure { onError(it.message ?: "Could not save the item.") }
+            }.onSuccess(onSaved)
+                .onFailure {
+                    // Only a failed save releases the latch: onSaved navigates
+                    // away, and a late tap in that window would duplicate.
+                    saving = false
+                    onError(it.message ?: "Could not save the item.")
+                }
         }
     }
 

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    My Closet (features #3-#5): title + filter circle, search field,
+    category chip row, 2-column grid (or informative empty state), and the
+    extended "Add Clothing" pill FAB at bottom-end.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rowin_surface">
+
+    <LinearLayout
+        android:id="@+id/closet_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header: title + filter circle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_closet_title"
+                android:textSize="24sp"
+                android:lineHeight="32sp"
+                android:letterSpacing="-0.01"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:id="@+id/closet_filter_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle_lowest">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_tune"
+                    android:tint="@color/rowin_on_surface_variant"
+                    android:contentDescription="@string/filters" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Search bar -->
+        <EditText
+            android:id="@+id/closet_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:minHeight="56dp"
+            android:background="@drawable/bg_field"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:hint="@string/search_wardrobe"
+            android:textColorHint="@color/rowin_outline"
+            android:textSize="14sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <!-- Category chips -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/closet_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:clipToPadding="false"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:orientation="horizontal"
+            android:overScrollMode="never" />
+
+        <!-- Empty state -->
+        <LinearLayout
+            android:id="@+id/closet_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="48dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_circle_container">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_closet_outlined"
+                    android:tint="@color/rowin_primary"
+                    android:contentDescription="@string/none" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/closet_empty_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/empty_closet_title"
+                android:textSize="18sp"
+                android:lineHeight="24sp"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface" />
+
+            <TextView
+                android:id="@+id/closet_empty_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/empty_closet_desc"
+                android:textSize="14sp"
+                android:lineHeight="20sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <Button
+                android:id="@+id/closet_empty_action"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="42dp"
+                android:layout_marginEnd="42dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_button_primary"
+                android:stateListAnimator="@null"
+                android:text="@string/add_clothing"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_primary" />
+        </LinearLayout>
+
+        <!-- Grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/closet_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="120dp"
+            tools:listitem="@layout/item_clothing_card" />
+    </LinearLayout>
+
+    <!-- Extended pill FAB -->
+    <LinearLayout
+        android:id="@+id/closet_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="100dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="6dp"
+        android:background="@drawable/bg_fab_pill">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/rowin_on_primary"
+            android:contentDescription="@string/none" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/add_clothing"
+            android:textSize="12sp"
+            android:lineHeight="16sp"
+            android:letterSpacing="0.04"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_on_primary" />
+    </LinearLayout>
+</FrameLayout>

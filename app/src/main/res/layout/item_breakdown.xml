@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Outfit breakdown card (feature #10): 120x120 image, name, category -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/breakdown_root"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_breakdown_image">
+
+        <ImageView
+            android:id="@+id/breakdown_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/none"
+            tools:src="@drawable/ic_image" />
+
+        <ImageView
+            android:id="@+id/breakdown_image_placeholder"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_image"
+            android:tint="@color/rowin_outline"
+            android:contentDescription="@string/none" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/breakdown_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:lineHeight="16sp"
+        android:letterSpacing="0.04"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/rowin_on_surface"
+        tools:text="Blue Jeans" />
+
+    <TextView
+        android:id="@+id/breakdown_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="11sp"
+        android:lineHeight="14sp"
+        android:letterSpacing="0.04"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/rowin_outline"
+        tools:text="Bottoms" />
+</LinearLayout>

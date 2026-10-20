@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Avatar edit badge: PrimaryContainer circle with 2dp surface ring -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@color/rowin_primary_container" />
+    <stroke android:width="2dp" android:color="@color/rowin_surface" />
+</shape>

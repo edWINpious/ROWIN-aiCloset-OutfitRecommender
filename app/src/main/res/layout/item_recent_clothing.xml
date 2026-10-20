@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Recently-added rail card (Home): 140dp wide, 160dp image, 16dp radius -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recent_item_root"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="@drawable/bg_recent_image">
+
+        <ImageView
+            android:id="@+id/recent_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/none"
+            tools:src="@drawable/ic_image" />
+
+        <ImageView
+            android:id="@+id/recent_image_placeholder"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_image"
+            android:tint="@color/rowin_outline"
+            android:contentDescription="@string/none" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/recent_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:lineHeight="16sp"
+        android:letterSpacing="0.04"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/rowin_on_surface"
+        tools:text="Denim Jacket" />
+
+    <TextView
+        android:id="@+id/recent_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="11sp"
+        android:lineHeight="14sp"
+        android:letterSpacing="0.04"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/rowin_outline"
+        tools:text="Outerwear" />
+</LinearLayout>

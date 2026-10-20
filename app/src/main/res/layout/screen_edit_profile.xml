@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Feature #16 - Edit Profile - 1:1 with the Stitch profile_detail design:
+    avatar with edit badge, Full Name / Email / Phone / Location icon fields,
+    Save (header action + button) and Cancel.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_profile_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/rowin_surface">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/edit_profile_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/edit_profile_title"
+            android:textSize="20sp"
+            android:lineHeight="26sp"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_primary" />
+
+        <TextView
+            android:id="@+id/edit_profile_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/save"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:letterSpacing="0.01"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_primary" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <!-- Avatar + edit badge (per mock) -->
+            <FrameLayout
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp">
+
+                <FrameLayout
+                    android:id="@+id/edit_profile_avatar_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_circle_avatar">
+
+                    <ImageView
+                        android:id="@+id/edit_profile_avatar_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/profile_photo" />
+
+                    <TextView
+                        android:id="@+id/edit_profile_avatar_initial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="28sp"
+                        android:lineHeight="36sp"
+                        android:letterSpacing="-0.02"
+                        android:fontFamily="@font/manrope"
+                        android:textStyle="bold"
+                        android:textColor="@color/rowin_primary"
+                        tools:text="E" />
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/edit_profile_avatar_badge"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_badge"
+                    android:src="@drawable/ic_edit"
+                    android:tint="@color/rowin_on_primary"
+                    android:contentDescription="@string/update_photo" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/update_photo"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/field_full_name"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface_variant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_field">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_person"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <EditText
+                        android:id="@+id/edit_profile_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:layout_marginStart="12dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="16dp"
+                        android:hint="@string/hint_your_name"
+                        android:textColorHint="@color/rowin_outline"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/rowin_on_surface"
+                        android:inputType="textPersonName"
+                        android:singleLine="true"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/field_email_address"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface_variant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_field">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_mail"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <EditText
+                        android:id="@+id/edit_profile_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:layout_marginStart="12dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="16dp"
+                        android:hint="@string/hint_email"
+                        android:textColorHint="@color/rowin_outline"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/rowin_on_surface"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/field_phone"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface_variant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_field">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_phone"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <EditText
+                        android:id="@+id/edit_profile_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:layout_marginStart="12dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="16dp"
+                        android:hint="@string/hint_phone"
+                        android:textColorHint="@color/rowin_outline"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/rowin_on_surface"
+                        android:inputType="phone"
+                        android:singleLine="true"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/field_location"
+                    android:textSize="12sp"
+                    android:lineHeight="16sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface_variant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_field">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_location"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <EditText
+                        android:id="@+id/edit_profile_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:layout_marginStart="12dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="16dp"
+                        android:hint="@string/hint_location"
+                        android:textColorHint="@color/rowin_outline"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/rowin_on_surface"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/edit_profile_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_error"
+                tools:text="Please enter your name." />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="28dp" />
+
+            <Button
+                android:id="@+id/edit_profile_save_button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_button_primary"
+                android:stateListAnimator="@null"
+                android:text="@string/save_changes"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_primary" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <Button
+                android:id="@+id/edit_profile_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_button_outlined"
+                android:stateListAnimator="@null"
+                android:text="@string/cancel"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

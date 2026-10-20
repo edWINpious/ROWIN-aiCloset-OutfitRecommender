@@ -1,5 +1,218 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ROWIN</string>
-    <string name="tagline">Your wardrobe, beautifully organized.</string>
+    <string name="none" translatable="false" />
+
+    <!-- Bottom navigation (feature #17) -->
+    <string name="nav_home">Home</string>
+    <string name="nav_closet">Closet</string>
+    <string name="nav_outfits">Outfits</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Login (feature #1) -->
+    <string name="login_welcome">Welcome back</string>
+    <string name="login_subtitle">Your wardrobe, beautifully organized.</string>
+    <string name="field_email">Email</string>
+    <string name="hint_enter_email">Enter your email</string>
+    <string name="field_password">Password</string>
+    <string name="hint_enter_password">Enter your password</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_hint">Password reset isn\'t available in this build - create a new account if you can\'t sign in.</string>
+    <string name="log_in">Log In</string>
+    <string name="footer_no_account">Don\'t have an account?</string>
+    <string name="create_account_link">Create Account</string>
+
+    <!-- Register (feature #1) -->
+    <string name="register_title">Create your account</string>
+    <string name="register_subtitle">Start building your digital wardrobe.</string>
+    <string name="field_name">Name</string>
+    <string name="hint_enter_name">Enter your name</string>
+    <string name="hint_create_password">Create a password</string>
+    <string name="field_confirm_password">Confirm Password</string>
+    <string name="hint_confirm_password">Confirm your password</string>
+    <string name="create_account">Create Account</string>
+    <string name="error_enter_name">Please enter your name.</string>
+    <string name="error_valid_email">Enter a valid email address.</string>
+    <string name="error_password_length">Password must be at least 6 characters.</string>
+    <string name="error_password_match">Passwords do not match.</string>
+    <string name="footer_have_account">Already have an account?</string>
+    <string name="sign_in_link">Sign In</string>
+
+    <!-- Home (feature #2) -->
+    <string name="home_tagline">Ready to curate your look for today?</string>
+    <string name="my_closet_label">  MY CLOSET</string>
+    <string name="hero_empty_subtitle">Start curating - add your first pieces to your collection.</string>
+    <string name="view_wardrobe">View wardrobe</string>
+    <string name="quick_planner">Outfit Planner</string>
+    <string name="quick_planner_sub">Plan your week.</string>
+    <string name="quick_stylist">AI Stylist</string>
+    <string name="quick_stylist_sub">Ask what to wear.</string>
+    <string name="recently_added">Recently Added</string>
+    <string name="see_all">See all</string>
+    <string name="recent_empty">Your closet is empty. Add your first item!</string>
+
+    <!-- My Closet (features #3-#5) -->
+    <string name="my_closet_title">My Closet</string>
+    <string name="filters">Filters</string>
+    <string name="search_wardrobe">Search your wardrobe</string>
+    <string name="add_clothing">Add Clothing</string>
+    <string name="empty_closet_title">Your closet is empty</string>
+    <string name="empty_closet_desc">Start building your digital wardrobe by adding your first clothing item.</string>
+    <string name="empty_results_title">No items found</string>
+    <string name="empty_results_desc">Try a different search or category filter.</string>
+    <string name="chip_all">All</string>
+
+    <!-- Add / Edit Clothing (features #5-#7, #20) -->
+    <string name="add_clothing_title">Add Clothing</string>
+    <string name="edit_clothing_title">Edit Clothing</string>
+    <string name="add_clothing_sub">Add an item to your wardrobe.</string>
+    <string name="close">Close</string>
+    <string name="clothing_photo">Clothing photo</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="analyze_with_ai">  Analyze with AI</string>
+    <string name="analyze_with_ai_action">Analyze with AI</string>
+    <string name="ai_analyzing">Analyzing your item with Groq AI...</string>
+    <string name="ai_color_detected">Color detected. </string>
+    <string name="analyze_desc">Automatically identify category, color, season and occasion.</string>
+    <string name="apply_to_fields">Apply to fields</string>
+    <string name="applied">Applied</string>
+    <string name="item_details">Item Details</string>
+    <string name="hint_item_name">e.g. White Oxford Shirt</string>
+    <string name="field_category">Category</string>
+    <string name="field_color">Color</string>
+    <string name="hint_color">e.g. Navy Blue</string>
+    <string name="field_season">Season</string>
+    <string name="field_occasion">Occasion</string>
+    <string name="field_pattern">Pattern</string>
+    <string name="hint_pattern">e.g. Striped</string>
+    <string name="field_style">Style</string>
+    <string name="hint_style">e.g. Casual</string>
+    <string name="field_material">Material</string>
+    <string name="hint_material">e.g. Cotton</string>
+    <string name="add_to_closet">Add to Closet</string>
+    <string name="save_changes">Save Changes</string>
+
+    <!-- Camera (feature #20) -->
+    <string name="camera_permission_msg">ROWIN needs camera access to photograph your wardrobe items.</string>
+    <string name="grant_camera">Grant camera access</string>
+    <string name="close_camera">Close camera</string>
+    <string name="flash">Flash</string>
+    <string name="flip_camera">Flip camera</string>
+    <string name="capture_failed">Capture failed</string>
+
+    <!-- Clothing detail (feature #7) -->
+    <string name="clothing_detail">Clothing Detail</string>
+    <string name="back">Back</string>
+    <string name="edit_item">Edit item</string>
+    <string name="label_category">CATEGORY</string>
+    <string name="label_color">COLOR</string>
+    <string name="label_season">SEASON</string>
+    <string name="label_occasion">OCCASION</string>
+    <string name="label_ai_attributes">AI ATTRIBUTES</string>
+    <string name="label_ai_description">AI DESCRIPTION</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="delete_item_title">Delete Item?</string>
+    <string name="delete_item_message">Are you sure you want to remove \u0022%1$s\u0022 from your closet? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Outfit planner (features #8-#9, #12, #21) -->
+    <string name="outfit_planner">Outfit Planner</string>
+    <string name="outfit_planner_sub">Build a look from your wardrobe.</string>
+    <string name="edit_outfit">Edit Outfit</string>
+    <string name="slot_outerwear">Outerwear (Optional)</string>
+    <string name="slot_outerwear_short">Outerwear</string>
+    <string name="slot_top">Top</string>
+    <string name="slot_top_short">Top</string>
+    <string name="slot_bottom">Bottom</string>
+    <string name="slot_bottom_short">Bottom</string>
+    <string name="slot_shoes">Shoes</string>
+    <string name="slot_shoes_short">Shoes</string>
+    <string name="remove_item">Remove item</string>
+    <string name="ai_suggestions">AI Suggestions</string>
+    <string name="outfit_name">Outfit Name</string>
+    <string name="hint_outfit_name">e.g. Spring Office Look</string>
+    <string name="generate_outfit">Generate Outfit</string>
+    <string name="generating">Generating...</string>
+    <string name="save_outfit">Save Outfit</string>
+    <string name="update_outfit">Update Outfit</string>
+    <string name="choose_item">Choose %1$s</string>
+    <string name="no_items_in_category">No items in this category yet. Add some to your closet first.</string>
+    <string name="clear_selection">Clear selection</string>
+
+    <!-- Saved outfits (feature #14) -->
+    <string name="saved_outfits">Saved Outfits</string>
+    <string name="empty_outfits_title">No saved outfits yet</string>
+    <string name="empty_outfits_desc">Combine your clothing pieces in the planner and save your first look.</string>
+    <string name="create_outfit">Create Outfit</string>
+
+    <!-- Outfit detail (feature #10, #13) -->
+    <string name="outfit_details">Outfit Details</string>
+    <string name="remove_outfit">Remove Outfit</string>
+    <string name="loading">Loading...</string>
+    <string name="season">Season</string>
+    <string name="occasion">Occasion</string>
+    <string name="created">Created</string>
+    <string name="outfit_breakdown">Outfit Breakdown</string>
+    <string name="remove_outfit_title">Remove Outfit?</string>
+    <string name="remove_outfit_message">Are you sure you want to remove \u0022%1$s\u0022 from your saved outfits? This action cannot be undone.</string>
+    <string name="remove">Remove</string>
+
+    <!-- Profile (feature #15) -->
+    <string name="profile_photo">Profile photo</string>
+    <string name="my_activity">MY ACTIVITY</string>
+    <string name="wardrobe_items">Wardrobe Items</string>
+    <string name="outfits_saved">Outfits Saved</string>
+    <string name="account">ACCOUNT</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="ai_assistant">AI Style Assistant</string>
+    <string name="ai_alerts">AI Alerts</string>
+    <string name="app_settings">App Settings</string>
+    <string name="sign_out">Sign Out</string>
+
+    <!-- Sign out sheet (feature #18) -->
+    <string name="sign_out_title">Sign Out?</string>
+    <string name="sign_out_message">Are you sure you want to sign out of your ROWIN account?</string>
+    <string name="sign_out_confirm">SIGN OUT</string>
+    <string name="stay_signed_in">Stay Signed In</string>
+
+    <!-- Settings sheet (practicals #4/#5/#10) -->
+    <string name="settings_title">App Settings</string>
+    <string name="network_online">Network online</string>
+    <string name="network_offline">Network offline</string>
+    <string name="network_detail">Wardrobe data stays available offline and syncs automatically.</string>
+    <string name="alerts_enabled">AI alerts enabled</string>
+    <string name="alerts_blocked">AI alerts blocked</string>
+    <string name="alerts_enabled_detail">Stylist notifications are on (Android 13+ permission).</string>
+    <string name="alerts_blocked_detail">Allow notifications in system settings to receive stylist alerts.</string>
+    <string name="close_action">Close</string>
+
+    <!-- Edit profile (feature #16) -->
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="update_photo">UPDATE PHOTO</string>
+    <string name="field_full_name">Full Name</string>
+    <string name="hint_your_name">Your name</string>
+    <string name="field_email_address">Email Address</string>
+    <string name="hint_email">you@example.com</string>
+    <string name="field_phone">Phone Number</string>
+    <string name="hint_phone">+1 (555) 000-0000</string>
+    <string name="field_location">Location</string>
+    <string name="hint_location">City, Country</string>
+
+    <!-- Chat (practical #8) -->
+    <string name="rowin_stylist">ROWIN Stylist</string>
+    <string name="ai_subtitle">Your AI fashion assistant</string>
+    <string name="typing">typing...</string>
+    <string name="stylist_thinking">Stylist is thinking...</string>
+    <string name="ask_your_stylist">Ask your stylist...</string>
+    <string name="send">Send</string>
+
+    <!-- Alerts (practical #10) -->
+    <string name="ai_alerts_title">AI Alerts</string>
+    <string name="no_alerts_title">No alerts right now</string>
+    <string name="no_alerts_desc">Your AI stylist will ping you here when your wardrobe needs attention.</string>
+    <string name="tap_to_open">Tap to open</string>
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Closet hero card: vertical PrimaryContainer -> #26503F gradient -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="@color/rowin_primary_container"
+        android:endColor="@color/rowin_hero_gradient_end" />
+    <corners android:radius="20dp" />
+</shape>

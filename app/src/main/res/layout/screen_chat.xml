@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Practical #8 - AI chatbot: full-screen stylist chat grounded in the
+    user's real wardrobe. Bubbles follow the ROWIN look: assistant = white
+    card with hairline border, user = brand green.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/rowin_surface">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/chat_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_chat_avatar">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_auto_awesome"
+                android:tint="@color/rowin_on_primary"
+                android:contentDescription="@string/none" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rowin_stylist"
+                android:textSize="16sp"
+                android:lineHeight="22sp"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface" />
+
+            <TextView
+                android:id="@+id/chat_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ai_subtitle"
+                android:textSize="11sp"
+                android:lineHeight="14sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/rowin_surface_variant" />
+
+    <!-- Message list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:overScrollMode="never"
+        tools:listitem="@layout/item_bubble" />
+
+    <TextView
+        android:id="@+id/chat_thinking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="8dp"
+        android:text="@string/stylist_thinking"
+        android:visibility="gone"
+        android:textSize="13sp"
+        android:lineHeight="18sp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/rowin_outline" />
+
+    <!-- Composer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp">
+
+        <EditText
+            android:id="@+id/chat_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            android:background="@drawable/bg_field"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:hint="@string/ask_your_stylist"
+            android:textColorHint="@color/rowin_outline"
+            android:textSize="14sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface"
+            android:inputType="text"
+            android:singleLine="true"
+            android:imeOptions="actionSend" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="1dp" />
+
+        <ImageButton
+            android:id="@+id/chat_send"
+            android:layout_width="31dp"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_chat_avatar"
+            android:contentDescription="@string/send"
+            android:src="@drawable/ic_send"
+            android:tint="@color/rowin_on_primary" />
+    </LinearLayout>
+</LinearLayout>

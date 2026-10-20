@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Features #8-#9, #12, #21 - Outfit Planner: slot canvas (Outerwear/Top/
+    Bottom/Shoes), AI suggestion strip, outfit name + season + occasion,
+    and the Generate Outfit / Save Outfit actions in the mock's order.
+    (Also used for Edit Outfit with a back header, per the Compose screen.)
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/planner_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/rowin_surface">
+
+    <!-- Tab-mode header (hidden in edit mode; edit uses a back header instead) -->
+    <LinearLayout
+        android:id="@+id/planner_tab_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/outfit_planner"
+            android:textSize="24sp"
+            android:lineHeight="32sp"
+            android:letterSpacing="-0.01"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/outfit_planner_sub"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant" />
+    </LinearLayout>
+
+    <!-- Edit-mode header (back + centered title) -->
+    <LinearLayout
+        android:id="@+id/planner_edit_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/planner_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:id="@+id/planner_edit_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/edit_outfit"
+            android:textSize="20sp"
+            android:lineHeight="26sp"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface" />
+
+        <Space
+            android:layout_width="48dp"
+            android:layout_height="1dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <!-- Slot canvas: Outerwear (wide), Top, Bottom (4:3), Shoes (wide) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/planner_slot_outerwear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_slot_empty"
+                android:clickable="true"
+                android:focusable="true"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+                <ImageView
+                    android:id="@+id/planner_slot_outerwear_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/none"
+                    app:layout_constraintDimensionRatio="21:9"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/planner_slot_outerwear_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_add"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/slot_outerwear"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/planner_slot_outerwear_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:text="@string/slot_outerwear_short"
+                    android:textSize="11sp"
+                    android:lineHeight="14sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/planner_slot_outerwear_clear"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/rowin_on_surface"
+                    android:contentDescription="@string/remove_item"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/planner_slot_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_slot_empty"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/planner_slot_top_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/none"
+                    app:layout_constraintDimensionRatio="4:3"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/planner_slot_top_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_add"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/slot_top"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/planner_slot_top_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:text="@string/slot_top_short"
+                    android:textSize="11sp"
+                    android:lineHeight="14sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/planner_slot_top_clear"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/rowin_on_surface"
+                    android:contentDescription="@string/remove_item"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/planner_slot_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_slot_empty"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/planner_slot_bottom_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/none"
+                    app:layout_constraintDimensionRatio="4:3"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/planner_slot_bottom_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_add"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/slot_bottom"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/planner_slot_bottom_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:text="@string/slot_bottom_short"
+                    android:textSize="11sp"
+                    android:lineHeight="14sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/planner_slot_bottom_clear"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/rowin_on_surface"
+                    android:contentDescription="@string/remove_item"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/planner_slot_shoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_slot_empty"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/planner_slot_shoes_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/none"
+                    app:layout_constraintDimensionRatio="21:9"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/planner_slot_shoes_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_add"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/slot_shoes"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/planner_slot_shoes_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:text="@string/slot_shoes_short"
+                    android:textSize="11sp"
+                    android:lineHeight="14sp"
+                    android:letterSpacing="0.04"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/rowin_on_surface"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/planner_slot_shoes_clear"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_slot_chip"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/rowin_on_surface"
+                    android:contentDescription="@string/remove_item"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Generated suggestions -->
+            <LinearLayout
+                android:id="@+id/planner_suggestions_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/ai_suggestions"
+                    android:textSize="16sp"
+                    android:lineHeight="22sp"
+                    android:fontFamily="@font/manrope"
+                    android:textStyle="bold"
+                    android:textColor="@color/rowin_on_surface" />
+
+                <TextView
+                    android:id="@+id/planner_generation_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="13sp"
+                    android:lineHeight="18sp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/rowin_on_surface_variant" />
+
+                <LinearLayout
+                    android:id="@+id/planner_suggestions_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Outfit info -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/outfit_name"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <EditText
+                android:id="@+id/planner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@drawable/bg_field"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="@string/hint_outfit_name"
+                android:textColorHint="@color/rowin_outline"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/field_season"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+
+                    <LinearLayout
+                        android:id="@+id/planner_season_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:minHeight="56dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:background="@drawable/bg_dropdown"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/planner_season_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/rowin_on_surface"
+                            tools:text="All Season" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_drop_down"
+                            android:tint="@color/rowin_on_surface_variant"
+                            android:contentDescription="@string/none" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="1dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/field_occasion"
+                        android:textSize="12sp"
+                        android:lineHeight="16sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_on_surface_variant" />
+
+                    <LinearLayout
+                        android:id="@+id/planner_occasion_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:minHeight="56dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:background="@drawable/bg_dropdown"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/planner_occasion_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/rowin_on_surface"
+                            tools:text="Casual" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_drop_down"
+                            android:tint="@color/rowin_on_surface_variant"
+                            android:contentDescription="@string/none" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/planner_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_error"
+                tools:text="Select at least one clothing piece." />
+
+            <!-- Actions, in the mock's order -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <Button
+                android:id="@+id/planner_generate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_button_outlined"
+                android:stateListAnimator="@null"
+                android:text="@string/generate_outfit"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <Button
+                android:id="@+id/planner_save"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_button_primary"
+                android:stateListAnimator="@null"
+                android:text="@string/save_outfit"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_primary" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

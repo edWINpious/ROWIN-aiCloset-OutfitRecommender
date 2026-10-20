@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Register (feature #1) - 1:1 with the Stitch register design: 40dp
+    wordmark, on-background heading, name/email/password/confirm fields
+    with the show/hide toggle on the password row, error text, the
+    "Create Account" button and the "Already have an account? Sign In" footer.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/rowin_surface">
+
+    <LinearLayout
+        android:id="@+id/register_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="72dp"
+        android:paddingBottom="48dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="48dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/wordmark_rowin" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/register_title"
+            android:textSize="28sp"
+            android:lineHeight="36sp"
+            android:letterSpacing="-0.02"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/register_subtitle"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="28dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_name"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <EditText
+                android:id="@+id/register_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@drawable/bg_field"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="@string/hint_enter_name"
+                android:textColorHint="@color/rowin_outline"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                android:inputType="textPersonName"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_email"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@drawable/bg_field"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="@string/hint_enter_email"
+                android:textColorHint="@color/rowin_outline"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_password"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/register_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:layout_marginEnd="52dp"
+                    android:background="@drawable/bg_field"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:hint="@string/hint_create_password"
+                    android:textColorHint="@color/rowin_outline"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/rowin_on_surface"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+                <ImageButton
+                    android:id="@+id/register_toggle_password"
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_visibility"
+                    android:tint="@color/rowin_outline"
+                    android:contentDescription="@string/show_password" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_confirm_password"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <EditText
+                android:id="@+id/register_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@drawable/bg_field"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="@string/hint_confirm_password"
+                android:textColorHint="@color/rowin_outline"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/register_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textSize="13sp"
+            android:lineHeight="18sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_error"
+            tools:text="Passwords do not match." />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="28dp" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:text="@string/create_account"
+            android:textSize="14sp"
+            android:letterSpacing="0.01"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_on_primary" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <TextView
+            android:id="@+id/register_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:gravity="center"
+            android:lineHeight="20sp"
+            android:textColor="@color/rowin_secondary"
+            android:textSize="14sp"
+            tools:text="Already have an account?  Sign In" />
+    </LinearLayout>
+</ScrollView>

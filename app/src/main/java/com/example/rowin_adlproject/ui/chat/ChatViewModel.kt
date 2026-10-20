@@ -6,21 +6,22 @@ import androidx.lifecycle.viewModelScope
 import com.example.rowin_adlproject.ai.ChatService
 import com.example.rowin_adlproject.data.AlertsEngine
 import com.example.rowin_adlproject.data.ChatMessage
-import com.example.rowin_adlproject.data.WardrobeRepository
+import com.example.rowin_adlproject.data.SessionMemory
 import com.example.rowin_adlproject.ui.rowinContainer
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Chat state for practical #8. The wardrobe is observed live so the stylist
- * always reasons over the user's current closet.
+ * Chat state for practical #8.
+ *
+ * The stylist reads the app-wide [SessionMemory] (profile + every clothing
+ * item + every saved outfit), which is loaded eagerly on login, so it always
+ * reasons over the whole closet instead of reporting it as empty.
  */
 class ChatViewModel(
-    repository: WardrobeRepository,
-    private val userId: Long,
+    /** Shared, app-lifetime snapshot owned by the AppContainer. */
+    private val memory: StateFlow<SessionMemory>,
     userName: String?,
 ) : ViewModel() {
 
@@ -34,9 +35,6 @@ class ChatViewModel(
     private val _thinking = MutableStateFlow(false)
     val thinking: StateFlow<Boolean> = _thinking
 
-    private val wardrobe = repository.observeClothing(userId)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
     fun send() {
         val text = input.value.trim()
         if (text.isEmpty() || _thinking.value) return
@@ -44,7 +42,9 @@ class ChatViewModel(
         _messages.value = _messages.value + ChatMessage(role = "user", text = text)
         _thinking.value = true
         viewModelScope.launch {
-            val result = chatService.reply(_messages.value, wardrobe.value)
+            // Fresh read at send time: Firestore may have streamed new pieces in.
+            val snapshot = memory.value
+            val result = chatService.reply(_messages.value, snapshot)
             val reply = result.getOrElse {
                 "I couldn't reach the AI service. Check your connection or Groq API key and try again."
             }
@@ -55,13 +55,12 @@ class ChatViewModel(
 
     class Factory(
         private val context: Context,
-        private val userId: Long,
         private val userName: String?,
     ) : androidx.lifecycle.ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             val container = context.rowinContainer()
-            return ChatViewModel(container.repository, userId, userName) as T
+            return ChatViewModel(container.sessionMemory, userName) as T
         }
     }
 }

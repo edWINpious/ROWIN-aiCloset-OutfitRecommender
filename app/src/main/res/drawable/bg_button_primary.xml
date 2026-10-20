@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Filled ROWIN button: 14dp radius, brand green, disabled at 50% alpha -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#80315C4C" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/rowin_primary_container" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</selector>

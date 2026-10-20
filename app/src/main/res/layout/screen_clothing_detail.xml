@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Feature #7 - Clothing Details: full info, AI attributes, Edit and Delete
+    (confirmation bottom sheet handled in code per feature #18).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/rowin_surface">
+
+    <!-- Detail header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/detail_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/clothing_detail"
+            android:textSize="20sp"
+            android:lineHeight="26sp"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_on_surface" />
+
+        <ImageButton
+            android:id="@+id/detail_edit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit"
+            android:tint="@color/rowin_primary_container"
+            android:contentDescription="@string/edit_item" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Hero image -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_image_slot">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+                    <ImageView
+                        android:id="@+id/detail_image"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/none"
+                        app:layout_constraintDimensionRatio="4:5"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/detail_image_placeholder"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_image"
+                        android:tint="@color/rowin_outline"
+                        android:contentDescription="@string/none"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/detail_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:textSize="24sp"
+                android:lineHeight="32sp"
+                android:letterSpacing="-0.01"
+                android:fontFamily="@font/manrope"
+                android:textStyle="bold"
+                android:textColor="@color/rowin_on_surface"
+                tools:text="White Oxford Shirt" />
+
+            <!-- Bento metadata grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@drawable/bg_meta_card">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_closet_outlined"
+                            android:tint="@color/rowin_secondary"
+                            android:contentDescription="@string/none" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_category"
+                                android:textSize="11sp"
+                                android:lineHeight="14sp"
+                                android:letterSpacing="0.04"
+                                android:fontFamily="@font/inter_medium"
+                                android:textColor="@color/rowin_secondary" />
+
+                            <TextView
+                                android:id="@+id/detail_category"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textSize="14sp"
+                                android:lineHeight="20sp"
+                                android:fontFamily="@font/inter"
+                                android:textColor="@color/rowin_on_surface"
+                                tools:text="Tops" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@drawable/bg_meta_card">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_palette"
+                            android:tint="@color/rowin_secondary"
+                            android:contentDescription="@string/none" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_color"
+                                android:textSize="11sp"
+                                android:lineHeight="14sp"
+                                android:letterSpacing="0.04"
+                                android:fontFamily="@font/inter_medium"
+                                android:textColor="@color/rowin_secondary" />
+
+                            <TextView
+                                android:id="@+id/detail_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textSize="14sp"
+                                android:lineHeight="20sp"
+                                android:fontFamily="@font/inter"
+                                android:textColor="@color/rowin_on_surface"
+                                tools:text="Navy Blue" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@drawable/bg_meta_card">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_calendar"
+                            android:tint="@color/rowin_secondary"
+                            android:contentDescription="@string/none" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_season"
+                                android:textSize="11sp"
+                                android:lineHeight="14sp"
+                                android:letterSpacing="0.04"
+                                android:fontFamily="@font/inter_medium"
+                                android:textColor="@color/rowin_secondary" />
+
+                            <TextView
+                                android:id="@+id/detail_season"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textSize="14sp"
+                                android:lineHeight="20sp"
+                                android:fontFamily="@font/inter"
+                                android:textColor="@color/rowin_on_surface"
+                                tools:text="All Season" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@drawable/bg_meta_card">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_cafe"
+                            android:tint="@color/rowin_secondary"
+                            android:contentDescription="@string/none" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_occasion"
+                                android:textSize="11sp"
+                                android:lineHeight="14sp"
+                                android:letterSpacing="0.04"
+                                android:fontFamily="@font/inter_medium"
+                                android:textColor="@color/rowin_secondary" />
+
+                            <TextView
+                                android:id="@+id/detail_occasion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textSize="14sp"
+                                android:lineHeight="20sp"
+                                android:fontFamily="@font/inter"
+                                android:textColor="@color/rowin_on_surface"
+                                tools:text="Casual" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- AI attributes card (hidden when empty) -->
+                <LinearLayout
+                    android:id="@+id/detail_ai_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_meta_card"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_auto_awesome"
+                        android:tint="@color/rowin_secondary"
+                        android:contentDescription="@string/none" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_ai_attributes"
+                            android:textSize="11sp"
+                            android:lineHeight="14sp"
+                            android:letterSpacing="0.04"
+                            android:fontFamily="@font/inter_medium"
+                            android:textColor="@color/rowin_secondary" />
+
+                        <TextView
+                            android:id="@+id/detail_ai_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textSize="14sp"
+                            android:lineHeight="20sp"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/rowin_on_surface"
+                            tools:text="Striped - Formal - Cotton" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- AI description card (hidden when empty) -->
+                <LinearLayout
+                    android:id="@+id/detail_desc_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_round_12"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_ai_description"
+                        android:textSize="11sp"
+                        android:lineHeight="14sp"
+                        android:letterSpacing="0.04"
+                        android:fontFamily="@font/inter_medium"
+                        android:textColor="@color/rowin_secondary" />
+
+                    <TextView
+                        android:id="@+id/detail_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textSize="14sp"
+                        android:lineHeight="20sp"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/rowin_on_surface"
+                        tools:text="A crisp white cotton shirt with a button-down collar." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
+            <!-- Delete action -->
+            <Button
+                android:id="@+id/detail_delete"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_button_outlined_danger"
+                android:stateListAnimator="@null"
+                android:text="@string/delete_item"
+                android:textSize="14sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_error" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

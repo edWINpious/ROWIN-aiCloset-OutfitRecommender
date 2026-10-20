@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Remove outfit confirmation bottom sheet (feature #13 + #18) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/bg_sheet_handle" />
+
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_circle_error_40">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/none"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/rowin_error"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/remove_outfit_title"
+        android:textSize="20sp"
+        android:lineHeight="26sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/rowin_on_surface" />
+
+    <TextView
+        android:id="@+id/sheet_remove_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/rowin_on_surface_variant"
+        android:gravity="center"
+        tools:text="@string/remove_outfit_title" />
+
+    <Button
+        android:id="@+id/sheet_remove_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_button_primary"
+        android:stateListAnimator="@null"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_on_primary"
+        android:textAllCaps="false"
+        android:text="@string/remove" />
+
+    <Button
+        android:id="@+id/sheet_remove_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_button_outlined"
+        android:stateListAnimator="@null"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"
+        android:lineHeight="20sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/rowin_on_surface"
+        android:textAllCaps="false"
+        android:text="@string/cancel" />
+</LinearLayout>

@@ -84,6 +84,68 @@ interface ClothingDao {
     @Query("SELECT * FROM clothing_items WHERE remoteId = :remoteId LIMIT 1")
     suspend fun getByRemoteId(remoteId: String): ClothingItemEntity?
 
+    @Query(
+        "SELECT * FROM clothing_items WHERE userId = :userId AND name = :name " +
+            "AND category = :categoryName AND color = :color AND createdAt = :createdAt LIMIT 1",
+    )
+    suspend fun findDuplicate(
+        userId: Long,
+        name: String,
+        categoryName: String,
+        color: String,
+        createdAt: Long,
+    ): ClothingItemEntity?
+
+    @Query(
+        "SELECT * FROM clothing_items WHERE remoteId IS NOT NULL " +
+            "ORDER BY userId ASC, remoteId ASC, id ASC",
+    )
+    suspend fun getAllWithRemoteId(): List<ClothingItemEntity>
+
+    @Query("SELECT * FROM outfit_items WHERE clothingItemId = :itemId")
+    suspend fun linksFor(itemId: Long): List<OutfitItemEntity>
+
+    @Query("SELECT COUNT(*) FROM outfit_items WHERE outfitId = :outfitId AND clothingItemId = :itemId")
+    suspend fun countLink(outfitId: Long, itemId: Long): Int
+
+    @Query(
+        "UPDATE outfit_items SET clothingItemId = :toId " +
+            "WHERE outfitId = :outfitId AND clothingItemId = :fromId",
+    )
+    suspend fun repointLink(outfitId: Long, fromId: Long, toId: Long)
+
+    /**
+     * One Firestore document must never surface as two closet rows.
+     *
+     * The push path names the doc after the local row id, so a snapshot used to
+     * arrive before pushItem() recorded `remoteId` and Room auto-generated a
+     * second row for the same garment. Keeps the oldest row per
+     * (userId, remoteId), moves any saved-outfit membership onto it, and drops
+     * the extra copies. Returns the number of rows removed.
+     */
+    @Transaction
+    suspend fun dedupeByRemoteId(): Int {
+        var removed = 0
+        val keepers = HashMap<String, ClothingItemEntity>()
+        for (row in getAllWithRemoteId()) {
+            val key = "${row.userId}|${row.remoteId}"
+            val keeper = keepers[key]
+            if (keeper == null) {
+                keepers[key] = row
+                continue
+            }
+            // Re-point outfit links instead of letting CASCADE erase them.
+            for (link in linksFor(row.id)) {
+                if (countLink(link.outfitId, keeper.id) == 0) {
+                    repointLink(link.outfitId, fromId = row.id, toId = keeper.id)
+                }
+            }
+            delete(row)
+            removed++
+        }
+        return removed
+    }
+
     @Query("SELECT COUNT(*) FROM clothing_items")
     suspend fun countAll(): Int
 

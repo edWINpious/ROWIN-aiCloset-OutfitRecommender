@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Login (feature #1) - 1:1 with the Stitch login design: centered ROWIN
+    wordmark (32dp), "Welcome back" heading in brand green, secondary
+    subtitle, email + password fields (outline-variant border, green focus),
+    right-aligned forgot-password link, filled 56dp/14dp-radius button and
+    the footer link. Matches AuthScaffold paddings exactly.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/rowin_surface">
+
+    <LinearLayout
+        android:id="@+id/login_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="72dp"
+        android:paddingBottom="48dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginBottom="48dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/wordmark_rowin" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/login_welcome"
+            android:textSize="28sp"
+            android:lineHeight="36sp"
+            android:letterSpacing="-0.02"
+            android:fontFamily="@font/manrope"
+            android:textStyle="bold"
+            android:textColor="@color/rowin_primary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/login_subtitle"
+            android:textSize="16sp"
+            android:lineHeight="24sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_secondary" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <!-- Email field (label + outlined input, per RowinTextField) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_email"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <EditText
+                android:id="@+id/login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@drawable/bg_field"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="@string/hint_enter_email"
+                android:textColorHint="@color/rowin_outline"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/rowin_on_surface"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                tools:text="edwin@example.com" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Password field with show/hide toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/field_password"
+                android:textSize="12sp"
+                android:lineHeight="16sp"
+                android:letterSpacing="0.04"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/rowin_on_surface_variant" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/login_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:layout_marginEnd="52dp"
+                    android:background="@drawable/bg_field"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:hint="@string/hint_enter_password"
+                    android:textColorHint="@color/rowin_outline"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/rowin_on_surface"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+                <ImageButton
+                    android:id="@+id/login_toggle_password"
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_visibility"
+                    android:tint="@color/rowin_outline"
+                    android:contentDescription="@string/show_password" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/login_forgot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:text="@string/forgot_password"
+            android:textSize="12sp"
+            android:lineHeight="16sp"
+            android:letterSpacing="0.04"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_primary_container" />
+
+        <TextView
+            android:id="@+id/login_reset_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:text="@string/reset_hint"
+            android:textSize="13sp"
+            android:lineHeight="18sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_on_surface_variant" />
+
+        <TextView
+            android:id="@+id/login_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textSize="13sp"
+            android:lineHeight="18sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_error"
+            tools:text="Invalid email or password." />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:text="@string/log_in"
+            android:textSize="14sp"
+            android:letterSpacing="0.01"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="@color/rowin_on_primary" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <TextView
+            android:id="@+id/login_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:lineHeight="20sp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/rowin_secondary"
+            tools:text="Don't have an account?  Create Account" />
+    </LinearLayout>
+</ScrollView>

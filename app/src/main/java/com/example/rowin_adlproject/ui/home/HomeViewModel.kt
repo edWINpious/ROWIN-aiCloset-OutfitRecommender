@@ -50,12 +50,16 @@ class HomeViewModel(
     fun imageFileFor(item: ClothingItemEntity): File? = imageStore.fileFor(item.imageFileName)
 
     companion object {
-        /** "Good morning/afternoon/evening" from device time. */
+        /**
+         * "Good morning/afternoon/evening" from device time.
+         *
+         * There is deliberately no night bucket: "Good night" is never shown,
+         * so late hours fall through to evening.
+         */
         fun greetingFor(hourOfDay: Int): String = when (hourOfDay) {
             in 5..11 -> "Good morning"
             in 12..16 -> "Good afternoon"
-            in 17..21 -> "Good evening"
-            else -> "Good night"
+            else -> "Good evening"
         }
 
         fun currentGreeting(): String = greetingFor(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
