@@ -3,7 +3,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose.plugin)
     alias(libs.plugins.ksp)
 }
 
@@ -63,9 +62,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -74,16 +70,6 @@ android {
 }
 
 dependencies {
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
     // View system (XML layouts + Fragments - the app's UI layer)
     implementation(libs.google.material)
     implementation(libs.androidx.fragment.ktx)
@@ -94,12 +80,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
 
     // Room (local wardrobe database)
     implementation(libs.androidx.room.runtime)
@@ -108,12 +88,8 @@ dependencies {
 
     // DataStore (per-user session state)
     implementation(libs.androidx.datastore.preferences)
-    // Encrypted credential storage
-    implementation(libs.androidx.security.crypto)
 
-    // Images
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
+    // Images (EXIF rotation for camera/gallery photos)
     implementation(libs.androidx.exifinterface)
 
     // Camera (real in-app viewfinder capture)
@@ -137,7 +113,5 @@ dependencies {
     testImplementation("org.json:json:20250517")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.room.testing)
 }

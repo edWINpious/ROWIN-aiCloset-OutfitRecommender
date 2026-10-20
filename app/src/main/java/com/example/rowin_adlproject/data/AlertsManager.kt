@@ -103,9 +103,10 @@ object AlertsEngine {
             }
 
             val staleCutoff = nowMillis - TimeUnit.DAYS.toMillis(30)
-            val stale = items.filter { it.createdAt < staleCutoff }
-            if (stale.isNotEmpty()) {
-                val item = stale.random()
+            // Always the oldest piece: a random pick changed the dedupe key on
+            // every refresh, so the 24h quiet period never applied.
+            val item = items.filter { it.createdAt < staleCutoff }.minByOrNull { it.createdAt }
+            if (item != null) {
                 alerts += Alert(
                     id = id++,
                     title = "Unworn favorite",
@@ -144,7 +145,8 @@ class AlertsManager(private val context: Context) {
     private val _alerts = MutableStateFlow<List<AlertsEngine.Alert>>(emptyList())
     val alerts: StateFlow<List<AlertsEngine.Alert>> = _alerts
 
-    private val lastShown = mutableMapOf<String, Long>()
+    /** When each alert key last notified - persisted, so the 24h quiet period survives restarts. */
+    private val lastShown = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** Recomputes from the live wardrobe and notifies new alerts (24h quiet per key). */
     fun refresh(wardrobe: List<ClothingItemEntity>) {
@@ -152,9 +154,9 @@ class AlertsManager(private val context: Context) {
         _alerts.value = computed
         val now = System.currentTimeMillis()
         computed.forEach { alert ->
-            val last = lastShown[alert.dedupeKey] ?: 0L
+            val last = lastShown.getLong(alert.dedupeKey, 0L)
             if (now - last > QUIET_PERIOD) {
-                lastShown[alert.dedupeKey] = now
+                lastShown.edit().putLong(alert.dedupeKey, now).apply()
                 notify(alert)
             }
         }
@@ -179,7 +181,9 @@ class AlertsManager(private val context: Context) {
             )
         }
         val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            // SINGLE_TOP: a running app gets onNewIntent instead of a restart.
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra(EXTRA_ROUTE, alert.actionRoute)
         }
         val pending = PendingIntent.getActivity(
@@ -189,7 +193,8 @@ class AlertsManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.wordmark_rowin)
+            // Status-bar icons must be a monochrome vector; the wordmark PNG showed as a blank square.
+            .setSmallIcon(R.drawable.ic_auto_awesome)
             .setContentTitle(alert.title)
             .setContentText(alert.message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(alert.message))
@@ -201,6 +206,7 @@ class AlertsManager(private val context: Context) {
 
     companion object {
         private const val CHANNEL_ID = "rowin_ai_alerts"
+        private const val PREFS = "rowin_alerts"
         const val EXTRA_ROUTE = "rowin_route"
         private val QUIET_PERIOD = TimeUnit.HOURS.toMillis(24)
     }

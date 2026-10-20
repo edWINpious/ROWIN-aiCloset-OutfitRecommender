@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.Junction
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Relation
 import androidx.room.Transaction
@@ -24,6 +25,9 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE id = :id")
     fun observeUser(id: Long): Flow<UserEntity?>
+
+    @Query("SELECT * FROM users WHERE id = :id")
+    suspend fun getById(id: Long): UserEntity?
 
     @Query("SELECT * FROM users WHERE email = :email COLLATE NOCASE LIMIT 1")
     suspend fun findByEmail(email: String): UserEntity?
@@ -81,9 +85,27 @@ interface ClothingDao {
     @Query("SELECT * FROM clothing_items WHERE userId = :userId ORDER BY createdAt DESC")
     suspend fun getOldestFirst(userId: Long): List<ClothingItemEntity>
 
-    @Query("SELECT * FROM clothing_items WHERE remoteId = :remoteId LIMIT 1")
-    suspend fun getByRemoteId(remoteId: String): ClothingItemEntity?
+    // ---- Firestore sync (practical #4)
 
+    @Query("SELECT * FROM clothing_items WHERE userId = :userId AND remoteId = :remoteId LIMIT 1")
+    suspend fun getByRemoteId(userId: Long, remoteId: String): ClothingItemEntity?
+
+    /** Rows whose latest version the server has not confirmed yet. */
+    @Query("SELECT * FROM clothing_items WHERE userId = :userId AND synced = 0")
+    suspend fun getPending(userId: Long): List<ClothingItemEntity>
+
+    /** Rows the server has confirmed; one missing from the cloud was deleted elsewhere. */
+    @Query("SELECT * FROM clothing_items WHERE userId = :userId AND synced = 1 AND remoteId IS NOT NULL")
+    suspend fun getConfirmed(userId: Long): List<ClothingItemEntity>
+
+    @Query("UPDATE clothing_items SET remoteId = :remoteId WHERE id = :id")
+    suspend fun setRemoteId(id: Long, remoteId: String)
+
+    /** Only marks the version that was uploaded - a newer local edit stays pending. */
+    @Query("UPDATE clothing_items SET synced = 1 WHERE id = :id AND updatedAt = :updatedAt")
+    suspend fun markSynced(id: Long, updatedAt: Long)
+
+    /** Exact-content match, used to recognise pieces when importing the legacy cloud layout. */
     @Query(
         "SELECT * FROM clothing_items WHERE userId = :userId AND name = :name " +
             "AND category = :categoryName AND color = :color AND createdAt = :createdAt LIMIT 1",
@@ -96,68 +118,11 @@ interface ClothingDao {
         createdAt: Long,
     ): ClothingItemEntity?
 
-    @Query(
-        "SELECT * FROM clothing_items WHERE remoteId IS NOT NULL " +
-            "ORDER BY userId ASC, remoteId ASC, id ASC",
-    )
-    suspend fun getAllWithRemoteId(): List<ClothingItemEntity>
-
-    @Query("SELECT * FROM outfit_items WHERE clothingItemId = :itemId")
-    suspend fun linksFor(itemId: Long): List<OutfitItemEntity>
-
-    @Query("SELECT COUNT(*) FROM outfit_items WHERE outfitId = :outfitId AND clothingItemId = :itemId")
-    suspend fun countLink(outfitId: Long, itemId: Long): Int
-
-    @Query(
-        "UPDATE outfit_items SET clothingItemId = :toId " +
-            "WHERE outfitId = :outfitId AND clothingItemId = :fromId",
-    )
-    suspend fun repointLink(outfitId: Long, fromId: Long, toId: Long)
-
-    /**
-     * One Firestore document must never surface as two closet rows.
-     *
-     * The push path names the doc after the local row id, so a snapshot used to
-     * arrive before pushItem() recorded `remoteId` and Room auto-generated a
-     * second row for the same garment. Keeps the oldest row per
-     * (userId, remoteId), moves any saved-outfit membership onto it, and drops
-     * the extra copies. Returns the number of rows removed.
-     */
-    @Transaction
-    suspend fun dedupeByRemoteId(): Int {
-        var removed = 0
-        val keepers = HashMap<String, ClothingItemEntity>()
-        for (row in getAllWithRemoteId()) {
-            val key = "${row.userId}|${row.remoteId}"
-            val keeper = keepers[key]
-            if (keeper == null) {
-                keepers[key] = row
-                continue
-            }
-            // Re-point outfit links instead of letting CASCADE erase them.
-            for (link in linksFor(row.id)) {
-                if (countLink(link.outfitId, keeper.id) == 0) {
-                    repointLink(link.outfitId, fromId = row.id, toId = keeper.id)
-                }
-            }
-            delete(row)
-            removed++
-        }
-        return removed
-    }
-
     @Query("SELECT COUNT(*) FROM clothing_items")
     suspend fun countAll(): Int
 
     @Upsert
     suspend fun upsert(item: ClothingItemEntity): Long
-}
-
-/** Upsert helper used by Save/Update Outfit flows (feature #11/#12). */
-@Dao
-interface SessionDao {
-    @Upsert
-    suspend fun upsertUser(user: UserEntity)
 }
 
 // -------------------------------------------------------------- outfits
@@ -214,6 +179,46 @@ interface OutfitDao {
 
     @Query("SELECT COUNT(*) FROM outfits WHERE userId = :userId")
     fun observeCount(userId: Long): Flow<Int>
+
+    // ---- Firestore sync (practical #4)
+
+    @Query("SELECT * FROM outfits WHERE id = :id")
+    suspend fun getById(id: Long): OutfitEntity?
+
+    @Query("SELECT clothingItemId FROM outfit_items WHERE outfitId = :outfitId")
+    suspend fun itemIdsFor(outfitId: Long): List<Long>
+
+    @Query("SELECT * FROM outfits WHERE userId = :userId AND remoteId = :remoteId LIMIT 1")
+    suspend fun getByRemoteId(userId: Long, remoteId: String): OutfitEntity?
+
+    @Query("SELECT * FROM outfits WHERE userId = :userId AND synced = 0")
+    suspend fun getPending(userId: Long): List<OutfitEntity>
+
+    @Query("SELECT * FROM outfits WHERE userId = :userId AND synced = 1 AND remoteId IS NOT NULL")
+    suspend fun getConfirmed(userId: Long): List<OutfitEntity>
+
+    @Query("UPDATE outfits SET remoteId = :remoteId WHERE id = :id")
+    suspend fun setRemoteId(id: Long, remoteId: String)
+
+    @Query("UPDATE outfits SET synced = 1 WHERE id = :id AND updatedAt = :updatedAt")
+    suspend fun markSynced(id: Long, updatedAt: Long)
+}
+
+// ----------------------------------------------------------- tombstones
+
+@Dao
+interface TombstoneDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(tombstone: SyncTombstone)
+
+    @Query("DELETE FROM sync_tombstones WHERE remoteId = :remoteId")
+    suspend fun delete(remoteId: String)
+
+    @Query("SELECT * FROM sync_tombstones WHERE userId = :userId")
+    suspend fun forUser(userId: Long): List<SyncTombstone>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM sync_tombstones WHERE remoteId = :remoteId)")
+    suspend fun exists(remoteId: String): Boolean
 }
 
 

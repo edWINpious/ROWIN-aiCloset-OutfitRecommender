@@ -1,6 +1,7 @@
 package com.example.rowin_adlproject
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.rowin_adlproject.data.AlertsManager
 import com.example.rowin_adlproject.data.AppContainer
 import com.example.rowin_adlproject.data.SessionState
 import com.example.rowin_adlproject.databinding.ActivityMainBinding
@@ -42,10 +44,10 @@ import com.example.rowin_adlproject.ui.view.Screen
 import com.example.rowin_adlproject.ui.view.ScreenChrome
 import com.example.rowin_adlproject.ui.view.ScreenHost
 import com.example.rowin_adlproject.ui.view.ScreenRows
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -65,15 +67,27 @@ class MainActivity : AppCompatActivity(), ScreenHost {
         (application as RowinApplication).container
     }
 
+    /** The session's user; [NO_USER] (matches no row) if read while signed out. */
     override val userId: Long
-        get() = (rowin.sessionState.value as? SessionState.SignedIn)?.userId ?: 1L
+        get() = (rowin.sessionState.value as? SessionState.SignedIn)?.userId ?: NO_USER
 
     private var nav: NavController? = null
     private var signedIn = false
     private var hasUnreadAlerts = false
 
-    /** App-lifetime scope for the Firestore snapshot listener. */
-    private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    /** Back stack saved before a rotation / process death, applied once the session is known. */
+    private var restoredNav: Bundle? = null
+    private var restoredSignedIn = false
+
+    /**
+     * True on a rotation (the view model survived with the session loaded).
+     * After process death it is false: fragments the system restored were
+     * built before the session was known, so they are replaced, not reused.
+     */
+    private var sessionKnownAtCreate = false
+
+    /** Screen requested by a tapped alert notification, opened once signed in. */
+    private var pendingRoute: String? = null
 
     private val notificationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
@@ -83,13 +97,18 @@ class MainActivity : AppCompatActivity(), ScreenHost {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        // Hold the splash until the stored session is read, so a signed-in
+        // user never sees the login screen flash first.
+        installSplashScreen().setKeepOnScreenCondition {
+            !this::rowin.isInitialized || rowin.sessionState.value is SessionState.Loading
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         rowin = ViewModelProvider(this, Loaders.rowin(this))[RowinViewModel::class.java]
+        sessionKnownAtCreate = rowin.sessionState.value !is SessionState.Loading
 
         topBar = ComponentRowinTopBarBinding.inflate(layoutInflater, binding.topBarContainer)
         bottomBar = ComponentRowinBottomBarBinding.inflate(layoutInflater, binding.bottomBarContainer)
@@ -101,8 +120,24 @@ class MainActivity : AppCompatActivity(), ScreenHost {
             }
         })
 
+        restoredNav = savedInstanceState?.getBundle(KEY_NAV)
+        restoredSignedIn = savedInstanceState?.getBoolean(KEY_SIGNED_IN) ?: false
+        if (savedInstanceState == null) pendingRoute = intent.getStringExtra(AlertsManager.EXTRA_ROUTE)
+
         observeSession()
         observeChromeState()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        pendingRoute = intent.getStringExtra(AlertsManager.EXTRA_ROUTE) ?: return
+        if (signedIn) openPendingRoute()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        nav?.let { outState.putBundle(KEY_NAV, it.saveState()) }
+        outState.putBoolean(KEY_SIGNED_IN, signedIn)
     }
 
     // ------------------------------------------------------------ session gate
@@ -111,35 +146,44 @@ class MainActivity : AppCompatActivity(), ScreenHost {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 rowin.sessionState.collect { state ->
+                    // Still reading DataStore - the splash screen covers this.
+                    if (state is SessionState.Loading) return@collect
                     val nowSignedIn = state is SessionState.SignedIn
-                    if (nowSignedIn != signedIn) {
-                        signedIn = nowSignedIn
-                        nav = NavController(navHost)
-                        if (nowSignedIn) {
+                    val firstState = nav == null
+                    if (!firstState && nowSignedIn == signedIn) return@collect
+                    signedIn = nowSignedIn
+
+                    val controller = NavController(navHost)
+                    nav = controller
+                    val restored = restoredNav.takeIf { firstState && restoredSignedIn == nowSignedIn }
+                    restoredNav = null
+                    when {
+                        // Rotation / process death: back to the same screen, keeping the
+                        // restored fragment (and its view model) instead of a fresh one.
+                        restored != null && controller.restore(restored) ->
+                            presentScreen(controller.current, reuseExisting = sessionKnownAtCreate)
+                        nowSignedIn -> {
                             requestNotificationPermissionIfNeeded()
-                            nav?.reset(Destination(Screen.HOME))
-                        } else {
-                            container.firebaseSync.stop()
-                            nav?.reset(Destination(Screen.LOGIN))
+                            controller.reset(Destination(Screen.HOME))
                         }
-                    } else if (nav == null) {
-                        nav = NavController(navHost)
-                        nav?.reset(Destination(if (nowSignedIn) Screen.HOME else Screen.LOGIN))
+                        else -> {
+                            container.firebaseSync.stop()
+                            controller.reset(Destination(Screen.LOGIN))
+                        }
                     }
+                    if (nowSignedIn) openPendingRoute()
                 }
             }
         }
 
-        // Firebase sync (practical #4) keyed on the signed-in account's email.
+        // Firebase sync (practical #4) for the signed-in account.
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 combine(rowin.sessionState, rowin.user) { session, user -> session to user }
                     .collect { (session, user) ->
-                        val email = user?.email
-                        if (session is SessionState.SignedIn && email != null) {
-                            container.onUserKnown(session.userId, email)
-                            container.firebaseSync.start(syncScope, email)
-                        } else if (session !is SessionState.SignedIn) {
+                        if (session is SessionState.SignedIn && user != null && user.id == session.userId) {
+                            container.startSync(user)
+                        } else if (session is SessionState.SignedOut) {
                             container.firebaseSync.stop()
                         }
                     }
@@ -156,22 +200,36 @@ class MainActivity : AppCompatActivity(), ScreenHost {
         }
     }
 
+    /** Opens the screen a tapped alert notification points at. */
+    private fun openPendingRoute() {
+        val route = pendingRoute ?: return
+        pendingRoute = null
+        when (route) {
+            "closet" -> nav?.openTab(Screen.CLOSET)
+            "planner" -> nav?.openTab(Screen.OUTFITS)
+            "add_clothing" -> nav?.open(Screen.ADD_CLOTHING)
+        }
+    }
+
     // ---------------------------------------------------------------- chrome
 
     private fun observeChromeState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // AI alerts (practical #10): recompute on every wardrobe change
-                // and keep the top-bar unread dot in sync.
-                rowin.alertsVersion.collect { version ->
-                    hasUnreadAlerts = version > 0
-                    lifecycleScope.launch {
-                        container.alertsManager.refresh(container.repository.getAllClothing(userId))
+                // and keep the top-bar unread dot in sync. The session memory
+                // already holds the closet, so no extra query is needed.
+                container.sessionMemory
+                    .filter { it.isLoaded }
+                    .map { it.userId to it.items }
+                    .distinctUntilChanged()
+                    .collect { (_, items) ->
+                        container.alertsManager.refresh(items)
+                        hasUnreadAlerts = container.alertsManager.alerts.value.isNotEmpty()
+                        if (binding.topBarContainer.visibility == android.view.View.VISIBLE) {
+                            bindTopBar()
+                        }
                     }
-                    if (binding.topBarContainer.visibility == android.view.View.VISIBLE) {
-                        bindTopBar()
-                    }
-                }
             }
         }
         lifecycleScope.launch {
@@ -194,7 +252,7 @@ class MainActivity : AppCompatActivity(), ScreenHost {
         )
     }
 
-    private fun presentScreen(destination: Destination) {
+    private fun presentScreen(destination: Destination, reuseExisting: Boolean = false) {
         val screen = destination.screen
         val topLevel = signedIn && screen in NavController.TOP_LEVEL_ROUTES
 
@@ -205,8 +263,11 @@ class MainActivity : AppCompatActivity(), ScreenHost {
             ScreenRows.bindBottomBar(bottomBar, screen) { tab -> nav?.openTab(tab) }
         }
 
+        val tag = "screen_${screen.name}"
+        if (reuseExisting && supportFragmentManager.findFragmentById(R.id.nav_host_container)?.tag == tag) return
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_container, createFragment(destination), "screen_${screen.name}")
+            .replace(R.id.nav_host_container, createFragment(destination), tag)
             .commitAllowingStateLoss()
     }
 
@@ -245,5 +306,11 @@ class MainActivity : AppCompatActivity(), ScreenHost {
     companion object {
         /** Optional itemId / outfitId argument for detail + edit screens. */
         const val ARG_ITEM_ID = "arg_item_id"
+
+        /** Matches no user row (Room ids start at 1); same convention as SessionMemory. */
+        const val NO_USER = 0L
+
+        private const val KEY_NAV = "rowin_nav"
+        private const val KEY_SIGNED_IN = "rowin_signed_in"
     }
 }

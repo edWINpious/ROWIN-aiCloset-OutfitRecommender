@@ -40,7 +40,7 @@ class LoginFragment : HostedFragment(R.layout.screen_login) {
             AuthUi.syncPasswordToggle(b.loginPassword, b.loginTogglePassword, showPassword)
         }
 
-        b.loginForgot.setOnClickListener { b.loginResetHint.visibility = toggleOf(b.loginResetHint) }
+        b.loginForgot.setOnClickListener { sendReset() }
 
         b.loginEmail.onTextChanged { b.loginError.visibility = View.GONE }
         b.loginPassword.onTextChanged { b.loginError.visibility = View.GONE }
@@ -48,8 +48,25 @@ class LoginFragment : HostedFragment(R.layout.screen_login) {
         b.loginButton.setOnClickListener { attemptLogin() }
     }
 
-    private fun toggleOf(view: View): Int =
-        if (view.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    /** Emails a Firebase reset link to the address typed above. */
+    private fun sendReset() {
+        val email = b.loginEmail.text?.toString()?.trim().orEmpty()
+        if (email.isEmpty()) {
+            b.loginResetHint.text = getString(R.string.reset_enter_email)
+            Views.show(b.loginResetHint)
+            return
+        }
+        b.loginForgot.isEnabled = false
+        host.rowin.sendPasswordReset(email) { result ->
+            if (_b == null) return@sendPasswordReset
+            b.loginForgot.isEnabled = true
+            b.loginResetHint.text = result.fold(
+                onSuccess = { getString(R.string.reset_sent, email) },
+                onFailure = { it.message ?: getString(R.string.reset_failed) },
+            )
+            Views.show(b.loginResetHint)
+        }
+    }
 
     private fun attemptLogin() {
         if (loading) return

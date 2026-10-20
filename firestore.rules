@@ -1,0 +1,61 @@
+rules_version = '2';
+
+// ROWIN Cloud Firestore security rules.
+// Publish: Firebase console > Firestore Database > Rules (paste this file),
+// or `firebase deploy --only firestore:rules` with the Firebase CLI.
+//
+// Layout (see FirebaseSyncManager):
+//   users/{uid}             profile of one Firebase Auth account
+//   clothingItems/{itemId}  one garment, owned via `ownerId`
+//   outfits/{outfitId}      one outfit, owned via `ownerId`
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(data) {
+      return signedIn() && data.ownerId == request.auth.uid;
+    }
+
+    // Writes may only claim the caller as owner.
+    function ownedWrite() {
+      return isOwner(request.resource.data);
+    }
+
+    // Lower-cased Firebase Auth email, used only by the legacy layout below.
+    function authEmail() {
+      return signedIn() && request.auth.token.email != null
+        ? request.auth.token.email.lower()
+        : null;
+    }
+
+    match /users/{userId} {
+      allow read, write: if signedIn() && request.auth.uid == userId;
+
+      // Legacy layout (app versions before the restructure): users/{email}.
+      // The owner may read it and delete it while the app migrates it.
+      allow read, delete: if userId == authEmail();
+
+      match /items/{itemId} {
+        allow read, delete: if userId == authEmail();
+      }
+    }
+
+    match /clothingItems/{itemId} {
+      allow read: if isOwner(resource.data);
+      allow create: if ownedWrite();
+      allow update: if isOwner(resource.data) && ownedWrite();
+      // resource == null: deleting an already-deleted doc (a retried delete) is fine.
+      allow delete: if signedIn() && (resource == null || isOwner(resource.data));
+    }
+
+    match /outfits/{outfitId} {
+      allow read: if isOwner(resource.data);
+      allow create: if ownedWrite();
+      allow update: if isOwner(resource.data) && ownedWrite();
+      allow delete: if signedIn() && (resource == null || isOwner(resource.data));
+    }
+  }
+}

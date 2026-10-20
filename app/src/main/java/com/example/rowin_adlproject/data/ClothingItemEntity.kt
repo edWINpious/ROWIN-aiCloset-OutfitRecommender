@@ -28,8 +28,10 @@ data class ClothingItemEntity(
     val material: String? = null,
     val aiDescription: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
-    /** Firestore document id once synced (practical #4). Null = local only. */
+    /** Firestore `clothingItems/{remoteId}` document id (practical #4). Null = never synced. */
     val remoteId: String? = null,
-    /** True after the item has been mirrored to Firestore. */
+    /** True once the server has confirmed the latest local version. */
     val synced: Boolean = false,
+    /** Last edit time on any device; the newer copy wins a sync conflict. */
+    val updatedAt: Long = createdAt,
 )

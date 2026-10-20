@@ -130,9 +130,21 @@ Two independent causes, both fixed:
 - `ClothingDetailFragment` bento columns changed `match_parent` → `wrap_content` heights (4 columns).
 - `OutfitPlannerFragment` added 4 slot-selection collectors (`selectedTop/Bottom/Shoes/Outerwear`) for re-render.
 - Chat scope + memory: local `OFF_TOPIC` guard, strict `TOPIC SCOPE` system prompt, and `sessionMemory` (Eagerly) grounding every reply — all verified by a temporary unit test that was removed to preserve the 21-test count. A live-device re-verify is still pending (no emulator in this install).
-- **Open (multi-device):** `pushItem` still names the Firestore doc after the *local* row id, so two phones on the same account can collide on `items/{id}` (second push overwrites the first). Single-device use is unaffected, and the new content-verified snapshot matching prevents it from corrupting local rows. Fixing it properly means switching new pushes to auto-generated doc ids.
+- ~~**Open (multi-device):** doc ids named after local row ids~~ - fixed by the cloud restructure below.
 
 ## Untracked files (to ship)
 - New: `docs/LAYOUT_XML_MAP.md`, all new `ui/...Fragment.kt` + `ui/components/DisplayNames.kt` + `ui/view/*` + drawable set + `ui/RowinViewModels.kt` + all ViewModels + `data/`, `ai/`.
 - Deleted: all Compose UI (`RowinApp.kt`, `AuthScreens.kt`, `HomeScreen.kt`, `ChatScreen.kt`, `closet/{AddClothing,CameraCapture,ClothingDetail,MyCloset}Screen.kt`, `outfits/{OutfitDetail,OutfitPlanner,SavedOutfits}Screen.kt`, `profile/ProfileScreens.kt`, `alerts/AlertsScreen.kt`, `components/*.kt`, `theme/{Color,Theme,Type}.kt`).
 - Modified: `app/build.gradle.kts`, `MainActivity.kt`, `colors.xml`, `strings.xml`, `themes.xml`, `gradle/libs.versions.toml`.
+
+## Cloud restructure + review fixes (2026-10-21)
+- **Firestore layout**: `users/{uid}` (profile), `clothingItems/{autoId}` and `outfits/{autoId}`, each item/outfit doc carrying `ownerId`. Ids are generated on the phone before the Room insert, so the snapshot echo always finds its row (the push/snapshot race is gone by construction) and two phones can't collide.
+- **Auth**: `data/AuthService.kt` wraps Firebase Auth. Login/register go through it; the local PBKDF2 hash only enables offline sign-in. Pre-Auth local accounts get a Firebase account created on their next successful local login. "Forgot password?" sends a Firebase reset email.
+- **Two-way sync** (`FirebaseSyncManager` + pure `SyncMerge`): remote edits apply (newest `updatedAt` wins), remote deletes apply (only from a complete server snapshot, never from cache), offline deletes survive restarts via `sync_tombstones`, pending rows re-upload on start, outfits sync with `itemIds` referencing clothingItems ids. Profile sync is newest-wins both ways.
+- **Legacy migration**: on first login after the update, `users/{email}/items` is imported into Room (content-matched), re-uploaded to the new layout, and deleted only after every upload is confirmed.
+- **Room v3** (`MIGRATION_2_3`): merges old duplicate rows, adds `updatedAt` / `firebaseUid` / outfit sync columns, clears old numeric remote ids, adds `sync_tombstones`.
+- **Security rules**: `firestore.rules` + `firebase.json` in the project root (must be published in the console).
+- **App fixes**: no more `userId ?: 1L` fallbacks; back stack saved/restored across rotation and process death; splash held until the session loads; alerts refresh from `sessionMemory` (no stacked DB queries), dedupe persisted in SharedPreferences, stable "unworn" key, vector notification icon, notification taps open their screen.
+- **Build**: Compose plugin and all Compose / Navigation-Compose / Coil / security-crypto dependencies removed.
+- **Tests**: 29 (21 + `SyncMergeTest` 7 + `AlertsEngineTest` 1). `assembleDebug` green.
+- **Not verified on a device**: the emulator did not come online in this session; Firebase login/sync was not exercised live.

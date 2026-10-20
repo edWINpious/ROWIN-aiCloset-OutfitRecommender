@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 /**
  * Minimal manual DI container - everything the app needs, created once.
  *
- * Firebase (practical #4): Firestore initializes lazily inside
- * [FirebaseSyncManager]; without google-services.json the manager reports
- * LOCAL_ONLY and every push no-ops, keeping the app fully functional.
+ * Firebase (practicals #1/#4): [AuthService] and [FirebaseSyncManager] both
+ * initialize lazily; without google-services.json accounts stay local, the
+ * sync manager reports LOCAL_ONLY and every push no-ops, keeping the app
+ * fully functional.
  */
 class AppContainer(context: Context) {
     private val appContext = context.applicationContext
@@ -63,24 +63,38 @@ class AppContainer(context: Context) {
         }
         .stateIn(memoryScope, SharingStarted.Eagerly, SessionMemory())
 
-    // Resolves the local user id for a cloud email by scanning cached users
-    // (in-memory list, no suspend needed by the sync callback).
-    private val userEmails = java.util.concurrent.ConcurrentHashMap<String, Long>()
+    val auth: AuthService = AuthService()
 
     val firebaseSync: FirebaseSyncManager = FirebaseSyncManager(
         userDao = database.userDao(),
         clothingDao = database.clothingDao(),
-        resolveUserId = { email -> userEmails[email.lowercase()] ?: 1L },
+        outfitDao = database.outfitDao(),
+        tombstoneDao = database.tombstoneDao(),
+        deleteImage = { repository.imageStore.delete(it) },
     ).also { sync ->
         repository.sync = sync
-        // Seed the email -> id map as users register/sign in.
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            database.userDao().getAllUsers().forEach { userEmails[it.email.lowercase()] = it.id }
+        repository.auth = auth
+    }
+
+    /**
+     * Starts cloud sync for the signed-in [user] - but only when Firebase
+     * Auth holds a session for that same account, because the Firestore
+     * rules reject every other uid anyway.
+     */
+    fun startSync(user: UserEntity) {
+        val uid = auth.currentUid
+        when {
+            !firebaseSync.isAvailable -> firebaseSync.stop()
+            uid != null && uid == user.firebaseUid -> firebaseSync.start(user, uid)
+            // Signed in before cloud accounts existed, or offline at sign-in.
+            else -> firebaseSync.pause("Sign out and sign in again to turn on cloud sync")
         }
     }
 
-    /** Call on register/login so cloud items land under the right account. */
-    fun onUserKnown(id: Long, email: String) {
-        userEmails[email.lowercase()] = id
+    /** Ends the local session and the Firebase one together. */
+    suspend fun signOut() {
+        firebaseSync.stop()
+        repository.signOut()
+        sessionManager.endSession()
     }
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -47,21 +46,6 @@ class RowinViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-    /**
-     * Bumped whenever the wardrobe changes so the AI alerts engine (practical
-     * #10) recomputes; also drives the top-bar notification dot.
-     */
-    val alertsVersion: StateFlow<Int> = sessionState
-        .flatMapLatest { state ->
-            if (state is com.example.rowin_adlproject.data.SessionState.SignedIn) {
-                repository.observeClothing(state.userId)
-            } else {
-                flowOf(emptyList())
-            }
-        }
-        .map { it.size }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
-
     fun register(name: String, email: String, password: String, onDone: (Result<Long>) -> Unit) {
         viewModelScope.launch {
             val result = repository.register(name, email, password)
@@ -82,8 +66,12 @@ class RowinViewModel(
         viewModelScope.launch { repository.updateProfile(updated) }
     }
 
+    fun sendPasswordReset(email: String, onDone: (Result<Unit>) -> Unit) {
+        viewModelScope.launch { onDone(repository.sendPasswordReset(email)) }
+    }
+
     fun signOut() {
-        viewModelScope.launch { container.sessionManager.endSession() }
+        viewModelScope.launch { container.signOut() }
     }
 
     companion object {

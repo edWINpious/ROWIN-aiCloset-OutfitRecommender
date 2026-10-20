@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
  * A registered ROWIN user.
  *
  * Firebase note (feature #4 - data synchronization): [FirebaseSyncManager]
- * mirrors this row into Firestore `users/{uid}` using [UserEntity.email] as
- * the stable join key, so a cloud profile follows the same local identity.
+ * mirrors this row into Firestore `users/{firebaseUid}`. The local password
+ * hash is only kept so the account can still sign in while offline.
  */
 @Entity(
     tableName = "users",
@@ -29,4 +29,8 @@ data class UserEntity(
     val passwordHash: String,
     val passwordSalt: String,
     val createdAt: Long = System.currentTimeMillis(),
+    /** Firebase Auth uid; null for a local-only account (no google-services.json). */
+    val firebaseUid: String? = null,
+    /** Last profile edit on any device; the newer copy wins a sync conflict. */
+    val updatedAt: Long = createdAt,
 )
